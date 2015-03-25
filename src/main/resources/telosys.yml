@@ -1,0 +1,15 @@
+config:
+  rootFolder: /Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample
+  dslFolder: TelosysTools/model
+  bundleName: mongodb-templates
+
+entities:
+  Employee:
+    file: Employee.java
+    folder: src/main/java
+
+generations:
+  - entities:
+      - Employee
+    templates:
+      - bean_mongo.vm
