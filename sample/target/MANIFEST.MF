@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: bookstore
+Implementation-Version: 1.0.0
+Implementation-Vendor-Id: org.demo.bookstore
+Build-Jdk: 1.7.0_71
+Built-By: ludovicchaboud
+Created-By: IntelliJ IDEA
+Main-Class: org.demo.bookstore.BookstoreApplication
+

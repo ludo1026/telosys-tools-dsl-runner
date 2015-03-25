@@ -4,6 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TelosysConfigGeneration {
-    public List<TelosysConfigEntity> entities = new ArrayList<TelosysConfigEntity>();
-    public List<String> templates = new ArrayList<String>();
+    public List<String> entities = new ArrayList<String>();
+    public List<TelosysConfigTemplate> templates = new ArrayList<TelosysConfigTemplate>();
 }

@@ -1,7 +1,9 @@
 package org.telosys.tools.dsl.runner.main;
 
+import org.telosys.tools.commons.TelosysToolsException;
 import org.telosys.tools.commons.TelosysToolsLogger;
 import org.telosys.tools.commons.cfg.TelosysToolsCfg;
+import org.telosys.tools.commons.cfg.TelosysToolsCfgManager;
 import org.telosys.tools.dsl.generic.converter.Converter;
 import org.telosys.tools.dsl.parser.DomainModelParser;
 import org.telosys.tools.dsl.parser.model.DomainModel;
@@ -60,7 +62,8 @@ public class GeneratorRunnerManager {
         logger.info(model.toString());
 
         // Telosys tools config
-        TelosysToolsCfg telosysToolsCfg = new TelosysToolsCfg(projectAbsolutePath);
+        //TelosysToolsCfg telosysToolsCfg = new TelosysToolsCfg(projectAbsolutePath);
+        TelosysToolsCfg telosysToolsCfg = loadTelosysToolsCfg(projectAbsolutePath);
 
         // Generator config
         String sProjectLocation = projectAbsolutePath;
@@ -75,6 +78,21 @@ public class GeneratorRunnerManager {
             throw new RuntimeException(e);
         }
 
+    }
+
+    /**
+     * Returns the TelosysToolsCfg instance loaded from the 'telosys-tools.cfg' using 'TelosysToolsCfgManager'
+     * @return
+     */
+    private final TelosysToolsCfg loadTelosysToolsCfg(String projectAbsolutePath)  {
+        try {
+            System.out.println("Loading configuration from folder : " + projectAbsolutePath );
+            TelosysToolsCfgManager cfgManager = new TelosysToolsCfgManager( projectAbsolutePath );
+            TelosysToolsCfg telosysToolsCfg = cfgManager.loadProjectConfig();
+            return telosysToolsCfg ;
+        } catch (TelosysToolsException e) {
+            throw new RuntimeException("Cannot load 'TelosysToolsCfg'", e);
+        }
     }
 
 }

@@ -1,9 +1,10 @@
 package org.telosys.tools.dsl.runner.main.config;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
+import org.telosys.tools.commons.variables.Variable;
 import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfig;
 import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigConfig;
-import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigEntity;
+import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigTemplate;
 import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigGeneration;
 
 import java.io.FileReader;
@@ -30,15 +31,23 @@ public class TelosysConfigReader {
                 telosysConfigConfig.bundleName = dataConfig.get("bundleName");
                 telosysConfig.config = telosysConfigConfig;
             }
-            if(data.containsKey("entities")) {
-                Map<String, Object> dataEntities = (Map<String, Object>) data.get("entities");
-                for(String entityName : dataEntities.keySet()) {
-                    Map<String, String> dataEntity = (Map<String, String>) dataEntities.get(entityName);
-                    TelosysConfigEntity entity = new TelosysConfigEntity();
-                    entity.name = entityName;
-                    entity.file = dataEntity.get("file");
-                    entity.folder = dataEntity.get("folder");
-                    telosysConfig.entities.put(entityName, entity);
+            if(data.containsKey("variables")) {
+                Map<String, String> dataVariables = (Map<String, String>) data.get("variables");
+                for(String variableName : dataVariables.keySet()) {
+                    String variableValue = dataVariables.get(variableName);
+                    Variable variable = new Variable(variableName, variableValue);
+                    telosysConfig.variables.add(variable);
+                }
+            }
+            if(data.containsKey("templates")) {
+                Map<String, Object> dataTemplates = (Map<String, Object>) data.get("templates");
+                for(String templateName : dataTemplates.keySet()) {
+                    Map<String, String> dataTemplate = (Map<String, String>) dataTemplates.get(templateName);
+                    TelosysConfigTemplate template = new TelosysConfigTemplate();
+                    template.name = templateName;
+                    template.file = dataTemplate.get("file");
+                    template.folder = dataTemplate.get("folder");
+                    telosysConfig.templates.put(templateName, template);
                 }
             }
             if(data.containsKey("generations")) {
@@ -46,15 +55,17 @@ public class TelosysConfigReader {
                 for(Map<String, Object> dataGeneration : dataGenerations) {
                     TelosysConfigGeneration generation = new TelosysConfigGeneration();
                     telosysConfig.generations.add(generation);
-                    List<String> dataGenerationEntities = (List<String>) dataGeneration.get("entities");
-                    for(String entityName : dataGenerationEntities) {
-                        TelosysConfigEntity entity = telosysConfig.entities.get(entityName);
-                        if(entity != null) {
-                            generation.entities.add(entity);
-                        }
+                    if(dataGeneration.containsKey("entities")) {
+                        List<String> dataGenerationEntities = (List<String>) dataGeneration.get("entities");
+                        generation.entities.addAll(dataGenerationEntities);
                     }
                     List<String> dataGenerationTemplates = (List<String>) dataGeneration.get("templates");
-                    generation.templates.addAll(dataGenerationTemplates);
+                    for(String templateName : dataGenerationTemplates) {
+                        TelosysConfigTemplate template = telosysConfig.templates.get(templateName);
+                        if(template != null) {
+                            generation.templates.add(template);
+                        }
+                    }
                 }
             }
 

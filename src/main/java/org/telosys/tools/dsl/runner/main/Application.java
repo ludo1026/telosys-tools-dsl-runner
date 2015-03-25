@@ -2,7 +2,7 @@ package org.telosys.tools.dsl.runner.main;
 
 import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfig;
 import org.telosys.tools.dsl.runner.main.config.TelosysConfigReader;
-import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigEntity;
+import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigTemplate;
 import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfigGeneration;
 import org.telosys.tools.generator.api.GeneratorRunner;
 
@@ -24,18 +24,35 @@ public class Application {
 
         for(TelosysConfigGeneration generation : telosysConfig.generations) {
 
-            for(TelosysConfigEntity entity : generation.entities) {
-                String entityClassName = entity.name;
-                String outputFile = entity.file;
-                String outputFolder = entity.folder;
+            if(generation.entities.isEmpty()) {
 
-                for (String templateFileName : generation.templates) {
+                for (TelosysConfigTemplate template : generation.templates) {
+                    String templateFileName = template.name;
+                    String outputFile = template.file;
+                    String outputFolder = template.folder;
                     generatorRunner.generateEntity(
-                            entityClassName,
+                            "",
                             outputFile,
                             outputFolder,
                             templateFileName);
                 }
+
+            } else {
+
+                for (String entityClassName : generation.entities) {
+
+                    for (TelosysConfigTemplate template : generation.templates) {
+                        String templateFileName = template.name;
+                        String outputFile = template.file;
+                        String outputFolder = template.folder;
+                        generatorRunner.generateEntity(
+                                entityClassName,
+                                outputFile,
+                                outputFolder,
+                                templateFileName);
+                    }
+                }
+
             }
         }
     }
