@@ -1,9 +1,9 @@
 ##--------------------------------------------------------------------------------------------------------
 ## Data fields = fields not in Primary Key and not in selected Links
-#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.NOT_IN_LINKS ) )
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_IN_LINKS ) )
 ##--------------------------------------------------------------------------------------------------------
 ## Link fields = fields not in Primary Key and used as FK in selected Links
-#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
+#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_LINKS ) )
 ##--------------------------------------------------------------------------------------------------------
 #set( $allMappedFields = $fn.concatLists($entity.keyAttributes, $dataFields) )
 ##--------------------------------------------------------------------------------------------------------

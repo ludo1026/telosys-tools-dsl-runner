@@ -62,7 +62,6 @@ public class GeneratorRunnerManager {
         logger.info(model.toString());
 
         // Telosys tools config
-        //TelosysToolsCfg telosysToolsCfg = new TelosysToolsCfg(projectAbsolutePath);
         TelosysToolsCfg telosysToolsCfg = loadTelosysToolsCfg(projectAbsolutePath);
 
         // Generator config
