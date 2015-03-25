@@ -38,27 +38,6 @@ public class Application {
                 }
             }
         }
-
-        /*
-        String rootFolder = "/Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample";
-        String dslFolder = "TelosysTools/model";
-        String bundleName = "mongodb-templates";
-
-        GeneratorRunner generatorRunner = generatorRunnerManager.getGeneratorRunner(rootFolder, dslFolder, bundleName);
-*/
-        /*
-        // Generator entity
-        String entityClassName = "Employee"; // Nom de la classe de l'entité à générer";
-        String outputFile = "Employee.java"; // Nom du fichier généré";
-        String outputFolder = "src/main/java"; // Sous-répertoire à la racine du projet";
-        String templateFileName = "bean_mongo.vm"; // Nom du fichier de template de génération";
-
-        generatorRunner.generateEntity(
-                entityClassName,
-                outputFile,
-                outputFolder,
-                templateFileName);
-        */
     }
 
 }

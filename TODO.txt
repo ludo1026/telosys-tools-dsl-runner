@@ -1,0 +1,5 @@
+Parser Embedded
+Supprimer les énumérations
+Générateur : tester les templates Embedded et non Embedded
+générer Spring Data
+générer Morphia
