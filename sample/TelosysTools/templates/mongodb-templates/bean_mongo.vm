@@ -1,12 +1,3 @@
-##--------------------------------------------------------------------------------------------------------
-## Data fields = fields not in Primary Key and not in selected Links
-#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_IN_LINKS ) )
-##--------------------------------------------------------------------------------------------------------
-## Link fields = fields not in Primary Key and used as FK in selected Links
-#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_LINKS ) )
-##--------------------------------------------------------------------------------------------------------
-#set( $allMappedFields = $fn.concatLists($entity.keyAttributes, $dataFields) )
-##--------------------------------------------------------------------------------------------------------
 /*
  * Java bean class
  * Created on $today.date ( Date ISO $today.date("yyyy-MM-dd") - Time $today.time )
@@ -30,18 +21,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Telosys Tools Generator
  *
  */
-@Document(collection = "${fn.uncapitalize($entity.name)}")
+@Document(collection = "${fn.uncapitalize($entity.name)}s")
 public class $entity.name implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-#foreach( $field in $entity.keyAttributes )
+#foreach( $field in $entity.attributes )
+#if( $field.isKeyElement() )
     @Id
-    private $field.formattedType(10) $field.formattedName(12) #if($field.hasInitialValue())= ${field.initialValue} #end; // Primary Key
 #end
-
-#foreach( $field in $dataFields )
-    private $field.formattedType(10) $field.formattedName(12) #if($field.hasInitialValue())= ${field.initialValue} #end;
+    private $field.formattedType(1) $field.formattedName(1)#if($field.hasInitialValue())= ${field.initialValue}#end;
+#end
+#foreach( $link in $entity.links )
+    $link.fieldName;
 #end
 
     /**
@@ -51,31 +43,7 @@ public class $entity.name implements Serializable
     {
         super();
     }
-#foreach( $field in $entity.keyAttributes )
-    #if ( $field.setter )
-
-    /**
-     * Set the "$field.name" field value
-     * @param $field.name
-     */
-    public void ${field.setter}( $field.type $field.name )
-    {
-        this.$field.name = $field.name ;
-    }
-    #end
-    #if ( $field.getter )
-
-    /**
-     * Get the "$field.name" field value
-     * @return the field value
-     */
-    public $field.type ${field.getter}()
-    {
-        return this.$field.name;
-    }
-    #end
-#end
-#foreach( $field in $dataFields )
+#foreach( $field in $entity.attributes )
     #if ( $field.setter )
 
     /**

@@ -11,11 +11,13 @@ import $import;
 #end
 
 import com.mongodb.*;
+import cz.jirutka.spring.embedmongo.EmbeddedMongoBuilder;
+import ${ROOT_PKG}.ApplicationConfigTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import ${ENTITY_PKG}.${entity.name};
@@ -32,7 +34,7 @@ import java.util.List;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = ApplicationConfigTest.class)
 public class ${entity.name}RepositoryTest
 {
 
@@ -61,7 +63,7 @@ public class ${entity.name}RepositoryTest
         DB db = mongo.getDB("test");
 
         // Documents collection
-        DBCollection collection = db.getCollection("${fn.uncapitalize($entity.name)}");
+        DBCollection collection = db.getCollection("${fn.uncapitalize($entity.name)}s");
     }
 
     /**
@@ -73,6 +75,9 @@ public class ${entity.name}RepositoryTest
         ${entity.name} ${fn.uncapitalize($entity.name)} = new ${entity.name}();
 #foreach($field in ${entity.attributes})
 #set ( $type = $fn.uncapitalize($field.type) )
+#if ( $type == "integer" )
+        ${fn.uncapitalize($entity.name)}.${field.setter}(1);
+#end
 #if ( $type == "string" )
         ${fn.uncapitalize($entity.name)}.${field.setter}("Test");
 #end
@@ -98,10 +103,10 @@ public class ${entity.name}RepositoryTest
         DB db = mongo.getDB("test");
     
         // Documents collection
-        DBCollection collection = db.getCollection("${fn.uncapitalize($entity.name)}");
+        DBCollection collection = db.getCollection("${fn.uncapitalize($entity.name)}s");
     
         // Results
-        System.out.println("\nRésultat:");
+        System.out.println("\nResult:");
         DBCursor cursor = collection.find();
         if(cursor.count() == 0) {
             System.out.println("<vide>");
@@ -114,6 +119,7 @@ public class ${entity.name}RepositoryTest
 
         // Drop database
         mongo.dropDatabase("test");
+
     }
 
 }

@@ -21,7 +21,7 @@ import ${ENTITY_PKG}.${entity.name};
  * @author Telosys Tools Generator
  *
  */
-public class ${entity.name}Repository extends PagingAndSortingRepository<${entity.name}, String>
+public interface ${entity.name}Repository extends PagingAndSortingRepository<${entity.name}, String>
 {
 
 }
