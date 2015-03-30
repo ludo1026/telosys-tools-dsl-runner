@@ -34,6 +34,7 @@ public class Watch {
      * @param runner Generation runner
      */
     public void watch(TelosysConfig telosysConfig, Runner runner) {
+        System.out.println("Watch file modifications... (CTRL+C to exit)");
         try {
             final WatchService watcher = FileSystems.getDefault().newWatchService();
             Path start = Paths.get(telosysConfig.config.rootFolder + "/TelosysTools");

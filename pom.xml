@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telosys.tools</groupId>
 	<artifactId>telosys-tools-dsl-runner</artifactId>
-	<version>1.0.0</version>
+	<version>3.0.0</version>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
