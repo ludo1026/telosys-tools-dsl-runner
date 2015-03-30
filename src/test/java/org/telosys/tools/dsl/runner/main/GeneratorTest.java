@@ -1,21 +1,23 @@
 package org.telosys.tools.dsl.runner.main;
 
 import org.junit.Test;
+import org.telosys.tools.dsl.runner.main.config.bean.TelosysConfig;
 import org.telosys.tools.generator.api.GeneratorRunner;
 
 public class GeneratorTest {
 
-    @Test
+    //@Test
     public void testGenerateBeanMongo() {
         // Given
 
-        GeneratorRunnerManager generatorRunnerManager = new GeneratorRunnerManager();
+        RunnerManager generatorRunnerManager = new RunnerManager();
 
-        String rootFolder = "/Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample";
-        String dslFolder = "TelosysTools/model";
-        String bundleName = "mongodb-templates";
+        TelosysConfig telosysConfig = new TelosysConfig();
+        telosysConfig.config.rootFolder = "/Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample";
+        telosysConfig.config.dslFolder = "TelosysTools/model";
+        telosysConfig.config.bundleName = "mongodb-templates";
 
-        GeneratorRunner generatorRunner = generatorRunnerManager.getGeneratorRunner(rootFolder, dslFolder, bundleName);
+        Runner runner = generatorRunnerManager.getRunner(telosysConfig);
 
         String entityClassName = "Employee"; // Nom de la classe de l'entité à générer";
         String outputFile = "Employee.java"; // Nom du fichier généré";
@@ -23,7 +25,7 @@ public class GeneratorTest {
         String templateFileName = "bean_mongo.vm"; // Nom du fichier de template de génération";
 
         // When
-        generatorRunner.generateEntity(
+        runner.generatorRunner.generateEntity(
                 entityClassName,
                 outputFile,
                 outputFolder,

@@ -1,83 +1,49 @@
+/**
+ * Copyright (C) 2008-2014  Telosys project org. ( http://www.telosys.org/ )
+ *
+ *  Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *          http://www.gnu.org/licenses/lgpl.html
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package org.telosys.tools.dsl.runner.main;
 
-import java.io.IOException;
+import java.io.File;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.concurrent.TimeUnit;
-
-import static java.nio.file.StandardWatchEventKinds.*;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        String configFile;
+        if(args != null && args.length > 0 && args[0] != null) {
+            configFile = Paths.get(args[0]).toAbsolutePath().toString();
 
-        //String dslFolder = "/Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample/TelosysTools/model";
-        Application application = new Application();
-
-        application.main();
-
-        final WatchService watcher = FileSystems.getDefault().newWatchService();
-        String root = "/Users/ludovicchaboud/Code/workspace_telosys/telosys-tools-dsl-runner/sample";
-        Path start = Paths.get(root+"/TelosysTools");
-        try {
-            Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                        throws IOException
-                {
-                    if(dir.endsWith(".git")) {
-                        return FileVisitResult.TERMINATE;
-                    }
-                    System.out.println("Watch: "+dir);
-                    WatchKey key = dir.register(watcher,
-                            ENTRY_CREATE,
-                            ENTRY_DELETE,
-                            ENTRY_MODIFY);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-
-        } catch (IOException x) {
-            System.err.println(x);
-        }
-
-        for(;;) {
-            // wait for key to be signaled
-            WatchKey key;
-            try {
-                key = watcher.take();
-            } catch (InterruptedException x) {
+            File file = new File(configFile);
+            if(!file.exists()) {
+                System.err.println("Configuration file 'telosys.yml' not found : "+configFile);
                 return;
             }
-            for (WatchEvent<?> event: key.pollEvents()) {
-                WatchEvent.Kind<?> kind = event.kind();
 
-                // This key is registered only
-                // for ENTRY_CREATE events,
-                // but an OVERFLOW event can
-                // occur regardless if events
-                // are lost or discarded.
-                if (kind == OVERFLOW) {
-                    continue;
-                }
+        } else {
+            configFile = Paths.get("").toAbsolutePath().toString() + "/telosys.yml";
 
-                // The filename is the
-                // context of the event.
-                WatchEvent<Path> ev = (WatchEvent<Path>)event;
-                Path filename = ev.context();
-                System.out.println("File changed : "+filename);
 
-                application.main();
-            }
-
-            // Reset the key -- this step is critical if you want to
-            // receive further watch events.  If the key is no longer valid,
-            // the directory is inaccessible so exit the loop.
-            boolean valid = key.reset();
-            if (!valid) {
-                break;
+            File file = new File(configFile);
+            if(!file.exists()) {
+                System.err.println("Configuration file 'telosys.yml' not found in the current directory : "+configFile);
+                return;
             }
         }
+
+        Application application = new Application();
+        application.main(configFile);
     }
 
 }

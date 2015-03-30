@@ -82,6 +82,12 @@ public class ${entity.name}RepositoryTest
         ${fn.uncapitalize($entity.name)}.${field.setter}("Test");
 #end
 #end
+#foreach($link in $entity.links )
+
+        $link.fieldType $link.fieldName = new ${link.fieldType}();
+        ${fn.uncapitalize($entity.name)}.${link.setter}($link.fieldName);
+#end
+
         ${fn.uncapitalize($entity.name)}Repository.save(${fn.uncapitalize($entity.name)});
         
         Iterable<${entity.name}> ${fn.uncapitalize($entity.name)}s = ${fn.uncapitalize($entity.name)}Repository.findAll();

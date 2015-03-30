@@ -1,3 +1,9 @@
+#set( $hasNotEmbedded = false )
+#foreach( $link in $entity.links )
+#if( ! $link.isEmbedded )
+#set( $hasNotEmbedded = true )
+#end
+#end
 /*
  * Java bean class
  * Created on $today.date ( Date ISO $today.date("yyyy-MM-dd") - Time $today.time )
@@ -13,6 +19,9 @@ import $import;
 #end
 
 import org.springframework.data.annotation.Id;
+#if( $hasNotEmbedded )
+import org.springframework.data.mongodb.core.mapping.DBRef;
+#end
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -33,7 +42,10 @@ public class $entity.name implements Serializable
     private $field.formattedType(1) $field.formattedName(1)#if($field.hasInitialValue())= ${field.initialValue}#end;
 #end
 #foreach( $link in $entity.links )
-    $link.fieldName;
+#if( ! $link.isEmbedded )
+    @DBRef
+#end
+    private $link.fieldType $link.fieldName;
 #end
 
     /**
@@ -64,6 +76,30 @@ public class $entity.name implements Serializable
     public $field.type ${field.getter}()
     {
         return this.$field.name;
+    }
+    #end
+#end
+#foreach( $link in $entity.links )
+    #if ( $link.setter )
+
+    /**
+    * Set the "$link.fieldName" link value
+    * @param $link.fieldName
+    */
+    public void ${link.setter}( $link.fieldType $link.fieldName )
+    {
+        this.$link.fieldName = $link.fieldName;
+    }
+    #end
+    #if ( $link.getter )
+
+    /**
+    * Get the "$link.fieldName" link value
+    * @return the link value
+    */
+    public $link.fieldType ${link.getter}()
+    {
+        return this.$link.fieldName;
     }
     #end
 #end
